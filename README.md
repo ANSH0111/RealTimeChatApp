@@ -1,1 +1,1 @@
-# RealTimeChatApp
+A full-stack real-time chat app where users can exchange messages instantly. I used React for the frontend and Node.js with Express and Socket.IO for the backend. The app includes AI-generated messages using Google Gemini API(@ai), making conversations dynamic. I also used MongoDB and implemented basic user authentication.
