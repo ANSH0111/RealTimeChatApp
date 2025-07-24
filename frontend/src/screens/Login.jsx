@@ -9,9 +9,11 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const {setUser} = useContext(UserContext)
   const navigate = useNavigate();
+  const [error, setError] = useState("");
 
   async function submitHandler(e) {
     e.preventDefault();
+    setError("");
     // Add login logic here
     axios.post("/users/login", { email, password })
       .then((response) => {
@@ -20,7 +22,7 @@ const Login = () => {
         navigate("/"); // Redirect to home page on successful login
       })
       .catch((error) => {
-        console.log(error);
+        setError(error.response?.data?.message || "Login failed");
       })
   }
 
@@ -64,6 +66,9 @@ const Login = () => {
             Login
           </button>
         </form>
+        {error && (
+          <div className="mt-4 text-red-400 text-center">{error}</div>
+        )}
 
         <p className="mt-6 text-center text-sm">
           Don't have an account?{' '}

@@ -8,9 +8,11 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const {setUser} = useContext(UserContext)
   const navigate = useNavigate();
+  const [error, setError] = useState("");
 
  function submitHandler(e) {
     e.preventDefault();
+    setError("");
     axios.post("/users/register", { email, password })
       .then((res) => {
         console.log(res.data);
@@ -19,7 +21,7 @@ const Register = () => {
         navigate("/"); // Redirect to home page on successful registration
       }) 
       .catch((error) => {
-        console.log(error.response?.data?.message || "Registration failed");
+        setError(error.response?.data?.message || "Registration failed");
       })
   }
 
@@ -61,6 +63,9 @@ const Register = () => {
             Register
           </button>
         </form>
+        {error && (
+          <div className="mt-4 text-red-400 text-center">{error}</div>
+        )}
 
         <p className="mt-6 text-center text-sm">
           Already have an account?{' '}

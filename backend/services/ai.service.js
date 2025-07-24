@@ -44,9 +44,18 @@ const model = genAI.getGenerativeModel({
 });
 
 export const generateResult = async (prompt) => {
-  const result = await model.generateContent(
-    `User: ${prompt}`
-  );
+  try {
+    const result = await model.generateContent(
+      `User: ${prompt}`
+    );
 
-  return result.response.text();
+    return result.response.text();
+  } catch (error) {
+    if (error.status === 503) {
+      // Handle model overload gracefully
+      return { message: "AI service is temporarily unavailable. Please try again later." };
+    }
+    // Handle other errors
+    return { message: "An error occurred while processing your request." };
+  }
 };
