@@ -1,4 +1,4 @@
-import React,{useContext , useEffect} from 'react'
+import React,{useContext,useState , useEffect} from 'react'
 import { UserContext } from '../context/user.context'
 import axios from '../config/axios.js'
 import {useNavigate} from 'react-router-dom'
@@ -10,8 +10,25 @@ const Home = () => {
   const [isModalOpen, setIsModalOpen] = React.useState(false)
   const [projectName, setProjectName] = React.useState('')
   const [projects, setProjects] = React.useState([])
+  const [logoutError, setLogoutError] = useState("")
+
   const navigate = useNavigate()
 
+  const { setUser } = useContext(UserContext);
+
+  async function submitHandler(e) {
+    e.preventDefault();
+    setLogoutError("");
+    try {
+      await axios.post("/users/logout");
+      localStorage.removeItem("token");
+      setUser(null);
+      navigate("/login");
+    } catch (error) {
+      setLogoutError(error.response?.data?.message || "Logout failed");
+    }
+  }
+  
   function createProject(e) {
     e.preventDefault()
     console.log({projectName})
@@ -26,12 +43,13 @@ const Home = () => {
   }
 
   useEffect(() => {
-      axios.get('/projects/all').then((res) => {
-        setProjects(res.data.projects)
-      }).catch((err) => {
-        console.log(err)
-      })
-  }, [user])
+    if (!user) return; // Only run if user is present (logged in)
+    axios.get('/projects/all').then((res) => {
+      setProjects(res.data.projects)
+    }).catch((err) => {
+      console.log(err)
+    })
+  }, [])
 
   return (
     <main className='p-4 bg-black'>
@@ -40,7 +58,19 @@ const Home = () => {
         New Project
         <i className="ri-link ml-2"></i>
         </button>
-
+        <div className="absolute top-4 right-4">
+          <form onSubmit={submitHandler}>
+            <button
+              type="submit"
+              className="px-4 py-2 bg-red-500 text-white rounded-md"
+            >
+              Logout
+            </button>
+            {logoutError && (
+              <p className="text-red-400 text-xs mt-1">{logoutError}</p>
+            )}
+          </form>
+        </div>
         {
           projects.map((project) => (
             <div  onClick={()=>{navigate(`/project`,{

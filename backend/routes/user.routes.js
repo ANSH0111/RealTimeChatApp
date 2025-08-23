@@ -16,7 +16,7 @@ router.post('/login',
     userController.loginUserController);
 
 router.get('/profile', authMidlleware.authUser, userController.profileController);
-router.get('/logout', authMidlleware.authUser, userController.logoutController);
+router.post('/logout', authMidlleware.authUser, userController.logoutController);
 router.get('/all', authMidlleware.authUser, userController.getAllUsersController);
 
 export default router;
