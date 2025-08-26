@@ -10,4 +10,16 @@
 
 4.Fill in your actual credentials in the .env file
 
-5.Run the app
+5.Run the app :
+
+Frontend:
+In the terminal,
+
+cd frontend
+npm run dev
+
+Backend:
+In new terminal,
+
+cd backend
+npx nodemon
